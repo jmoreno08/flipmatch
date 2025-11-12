@@ -16,7 +16,15 @@ import javafx.util.Duration;
 
 import java.util.List;
 
+/**
+ * Controlador de UI del juego.
+ *
+ * <p>Gestiona la vista (panel superior, grilla de cartas, botón inferior) y
+ * se comunica con {@link GameService} para la lógica de juego y con
+ * {@link DeckService} para obtener las barajas.
+ */
 public class GameController {
+    /** Contenedor raíz de la escena. */
     private final BorderPane root = new BorderPane();
 
     // Top bar
@@ -25,7 +33,7 @@ public class GameController {
     private final Label triesLbl = makeLabel("Tries\n0");
     private final ComboBox<String> deckCombo = new ComboBox<>();
 
-    // Center grid
+    // Grid
     private final GridPane grid = new GridPane();
 
     // Bottom
@@ -36,20 +44,25 @@ public class GameController {
 
     private Timeline timer;
 
+    /** Crea la UI y el temporizador. */
     public GameController() {
         buildUI();
         setupTimer();
+        deckCombo.getItems().addAll(decks.getDeckNames());
+        deckCombo.setValue("Animals");
     }
 
+    /**
+     * @return nodo raíz para montar en la {@link Scene}.
+     */
     public Pane getRoot() { return root; }
 
+    /** Construye la interfaz de usuario (top, grid y bottom). */
     private void buildUI() {
-        // TOP
+        // Top stats
         HBox statBox = new HBox(16, boxed(timeLbl), boxed(scoreLbl), boxed(triesLbl));
         statBox.getStyleClass().add("stats-row");
 
-        deckCombo.getItems().addAll("Animals", "Food", "Objects");
-        deckCombo.setValue("Animals");
         deckCombo.setOnAction(e -> startNewGame(deckCombo.getValue()));
         HBox deckBox = new HBox(8, new Label("Deck:"), deckCombo);
         deckBox.setAlignment(Pos.CENTER_LEFT);
@@ -59,14 +72,14 @@ public class GameController {
         top.getStyleClass().add("top-pane");
         root.setTop(top);
 
-        // GRID
+        // Grid
         grid.setPadding(new Insets(12));
         grid.setHgap(12);
         grid.setVgap(12);
         grid.setAlignment(Pos.TOP_CENTER);
         root.setCenter(grid);
 
-        // BOTTOM
+        // Bottom
         restartBtn.setMaxWidth(Double.MAX_VALUE);
         restartBtn.getStyleClass().add("restart-btn");
         restartBtn.setOnAction(e -> startNewGame(deckCombo.getValue()));
@@ -75,6 +88,7 @@ public class GameController {
         root.setBottom(bottom);
     }
 
+    /** Configura el temporizador de un segundo para el cronómetro. */
     private void setupTimer() {
         timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             game.getStats().tick();
@@ -83,20 +97,11 @@ public class GameController {
         timer.setCycleCount(Timeline.INDEFINITE);
     }
 
-    private Label makeLabel(String text) {
-        Label l = new Label(text);
-        l.setFont(Font.font(14));
-        return l;
-    }
-
-    private Region boxed(Label inner) {
-        VBox box = new VBox(inner);
-        box.setAlignment(Pos.CENTER_LEFT);
-        box.setPadding(new Insets(8));
-        box.getStyleClass().add("stat-box");
-        return box;
-    }
-
+    /**
+     * Inicia una nueva partida con la baraja indicada.
+     *
+     * @param deckName nombre del mazo: "Animals", "Food" o "Objects".
+     */
     public void startNewGame(String deckName) {
         game.newBoard(decks.buildDeck(deckName).shuffledCopy16());
         buildGrid();
@@ -106,6 +111,7 @@ public class GameController {
         timer.playFromStart();
     }
 
+    /** Construye la grilla 4x4 con los botones de las cartas. */
     private void buildGrid() {
         grid.getChildren().clear();
         List<Card> cards = game.getBoard();
@@ -113,13 +119,19 @@ public class GameController {
         for (int r = 0; r < 4; r++) {
             for (int c = 0; c < 4; c++) {
                 Card card = cards.get(idx++);
-                Button b = cardButton(card, r, c);
+                Button b = cardButton(card);
                 grid.add(b, c, r);
             }
         }
     }
 
-    private Button cardButton(Card card, int row, int col) {
+    /**
+     * Crea el botón visual para una carta y asocia su evento de volteo.
+     *
+     * @param card carta del modelo
+     * @return botón JavaFX configurado
+     */
+    private Button cardButton(Card card) {
         Button b = new Button("?");
         b.setPrefSize(80, 80);
         b.getStyleClass().add("card");
@@ -128,6 +140,12 @@ public class GameController {
         return b;
     }
 
+    /**
+     * Maneja el evento de voltear carta y coordina el flujo de acierto/fallo.
+     *
+     * @param card carta asociada
+     * @param b    botón de la carta
+     */
     private void onFlip(Card card, Button b) {
         if (game.isLocked()) return;
         if (!game.flip(card)) return;
@@ -159,6 +177,7 @@ public class GameController {
         }
     }
 
+    /** Reconstruye los estados visuales de todas las cartas tras un fallo. */
     private void rebuildFaces() {
         grid.getChildren().forEach(node -> {
             if (node instanceof Button) {
@@ -172,6 +191,12 @@ public class GameController {
         refreshTopBar();
     }
 
+    /**
+     * Actualiza clases CSS y texto de un botón según el estado de la carta.
+     *
+     * @param b    botón de la carta
+     * @param card modelo de carta
+     */
     private void updateCardClasses(Button b, Card card) {
         b.getStyleClass().removeAll("card-faceup", "card-matched");
         if (card.isMatched()) {
@@ -186,6 +211,7 @@ public class GameController {
         }
     }
 
+    /** Refresca el panel superior (tiempo, puntaje, intentos). */
     private void refreshTopBar() {
         GameStats s = game.getStats();
         timeLbl.setText("Time\n" + format(s.getSeconds()));
@@ -193,8 +219,30 @@ public class GameController {
         triesLbl.setText("Tries\n" + s.getTries());
     }
 
+    /**
+     * Formatea segundos a mm:ss.
+     *
+     * @param seconds segundos transcurridos
+     * @return cadena en formato 00:00
+     */
     private String format(int seconds) {
         int m = seconds / 60, s = seconds % 60;
         return String.format("%02d:%02d", m, s);
+    }
+
+    /** Crea un {@link Label} con fuente base. */
+    private Label makeLabel(String text) {
+        Label l = new Label(text);
+        l.setFont(Font.font(14));
+        return l;
+    }
+
+    /** Crea una caja con estilo para las métricas superiores. */
+    private Region boxed(Label inner) {
+        VBox box = new VBox(inner);
+        box.setAlignment(Pos.CENTER_LEFT);
+        box.setPadding(new Insets(8));
+        box.getStyleClass().add("stat-box");
+        return box;
     }
 }

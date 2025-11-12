@@ -2,8 +2,30 @@ package application.service;
 
 import application.model.Deck;
 
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Servicio que provee barajas (decks) embebidas en código.
+ *
+ * <p>Permite obtener nombres de mazos disponibles y construir un {@link Deck}
+ * por nombre.
+ */
 public class DeckService {
 
+    /**
+     * @return lista de nombres de mazos disponibles.
+     */
+    public List<String> getDeckNames() {
+        return Arrays.asList("Animals", "Food", "Objects");
+    }
+
+    /**
+     * Construye un mazo por nombre.
+     *
+     * @param name "Animals", "Food" o "Objects"
+     * @return instancia de {@link Deck} con 8 pares
+     */
     public Deck buildDeck(String name) {
         switch (name) {
             case "Animals": return animals();
@@ -13,6 +35,7 @@ public class DeckService {
         }
     }
 
+    /** @return mazo "Animals" con 8 parejas. */
     private Deck animals() {
         Deck d = new Deck("Animals");
         d.addPair("dog", "Dog", "🐶");
@@ -26,6 +49,7 @@ public class DeckService {
         return d;
     }
 
+    /** @return mazo "Food" con 8 parejas. */
     private Deck food() {
         Deck d = new Deck("Food");
         d.addPair("apple", "Apple", "🍎");
@@ -39,6 +63,7 @@ public class DeckService {
         return d;
     }
 
+    /** @return mazo "Objects" con 8 parejas. */
     private Deck objects() {
         Deck d = new Deck("Objects");
         d.addPair("house", "House", "🏠");

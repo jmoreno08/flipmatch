@@ -1,31 +1,30 @@
 package application;
-	
-import javafx.application.Application;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 
+import application.controller.GameController;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 public class MainApp extends Application {
-	
-	@Override
-	public void start(Stage primaryStage) {
-		
-		
-		try {
-			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,400,400);
-			
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setTitle("Flip & Match");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
+
+    @Override
+    public void start(Stage stage) {
+        GameController controller = new GameController();
+        Scene scene = new Scene(controller.getRoot(), 380, 720);
+
+        // Cargar CSS desde resources en el classpath
+        String css = MainApp.class.getResource("/application/resources/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
+
+        stage.setTitle("Flip & Match");
+        stage.setScene(scene);
+        stage.show();
+
+        controller.startNewGame("Animals"); // mazo por defecto
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
+

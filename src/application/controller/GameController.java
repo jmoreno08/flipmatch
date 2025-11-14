@@ -28,16 +28,16 @@ public class GameController {
     private final BorderPane root = new BorderPane();
 
     // Top bar
-    private final Label timeLbl = makeLabel("Time\n00:00");
-    private final Label scoreLbl = makeLabel("Score\n0");
-    private final Label triesLbl = makeLabel("Tries\n0");
+    private final Label timeLbl = makeLabel("Tiempo\n00:00");
+    private final Label scoreLbl = makeLabel("Puntaje\n0");
+    private final Label triesLbl = makeLabel("Intentos\n0");
     private final ComboBox<String> deckCombo = new ComboBox<>();
 
     // Grid
     private final GridPane grid = new GridPane();
 
     // Bottom
-    private final Button restartBtn = new Button("Restart Game");
+    private final Button restartBtn = new Button("Reiniciar juego");
 
     private final GameService game = new GameService();
     private final DeckService decks = new DeckService();
@@ -64,7 +64,7 @@ public class GameController {
         statBox.getStyleClass().add("stats-row");
 
         deckCombo.setOnAction(e -> startNewGame(deckCombo.getValue()));
-        HBox deckBox = new HBox(8, new Label("Deck:"), deckCombo);
+        HBox deckBox = new HBox(8, new Label("Categoria:"), deckCombo);
         deckBox.setAlignment(Pos.CENTER_LEFT);
         deckBox.setPadding(new Insets(0,0,0,8));
 
@@ -214,9 +214,9 @@ public class GameController {
     /** Refresca el panel superior (tiempo, puntaje, intentos). */
     private void refreshTopBar() {
         GameStats s = game.getStats();
-        timeLbl.setText("Time\n" + format(s.getSeconds()));
-        scoreLbl.setText("Score\n" + s.getScore());
-        triesLbl.setText("Tries\n" + s.getTries());
+        timeLbl.setText("Tiempo\n" + format(s.getSeconds()));
+        scoreLbl.setText("Puntaje\n" + s.getScore());
+        triesLbl.setText("Intentos\n" + s.getTries());
     }
 
     /**

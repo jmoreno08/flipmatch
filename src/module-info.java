@@ -6,6 +6,7 @@
 
 module PrubaFX {
     requires javafx.controls;
+	requires org.junit.jupiter.api;
 
     exports application;
     exports application.controller;

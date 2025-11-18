@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html","k":"18"},{"m":"flipmatch","l":"application"},{"m":"flipmatch","l":"application.controller"},{"m":"flipmatch","l":"application.model"},{"m":"flipmatch","l":"application.service"}];updateSearchResults();

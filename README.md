@@ -40,3 +40,36 @@ El archivo GameServiceTest.java se colocó dentro de un paquete separado (src/te
 Se hizo clic derecho sobre el proyecto → Build Path → Configure Build Path → pestaña Libraries(a nivel de Modulepath) → Add Library… y se escogio la libreria de JUnit 5.
 - Ejecución de la prueba:
 Una vez agregado JUnit, se hizo clic derecho sobre el archivo de prueba(GameServiceTest.java) → Run As → JUnit Test. Eclipse ejecutó automáticamente los métodos anotados con @Test y mostró los resultados en la vista de JUnit.
+
+# Guía para Generar la Documentación Javadoc
+
+Esta guía explica paso a paso cómo generar la documentación **Javadoc** del proyecto *Flip & Match* utilizando **Eclipse**.
+
+---
+
+## 1. Abrir el generador de Javadoc
+
+- En la barra superior de Eclipse, ve a:  
+  **Project → Generate Javadoc…**
+- Selecciona el proyecto **flipmatch**.
+- Haz clic en **Next** hasta llegar a la pantalla final.
+
+---
+
+## 2. Generar la documentación
+
+- Revisa las opciones seleccionadas.
+- Haz clic en **Finish**.
+- Eclipse generará los archivos **.html** correspondientes al Javadoc.
+
+> **Nota:** Si aparece algún *warning*, no afecta la generación de la documentación.
+
+---
+
+## 3. Ver la documentación generada
+
+- Dentro de la carpeta **doc/** abre el archivo:  
+  **index.html**
+
+Esto mostrará el portal completo de documentación Javadoc.
+

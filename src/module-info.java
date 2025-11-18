@@ -4,9 +4,11 @@
  * <p>Expone los paquetes de aplicación para su uso por JavaFX.
  */
 
-module PrubaFX {
+module flipmatch {
+	
     requires javafx.controls;
-	requires org.junit.jupiter.api;
+    requires javafx.fxml;
+    //requires org.junit.jupiter.api;
 
     exports application;
     exports application.controller;

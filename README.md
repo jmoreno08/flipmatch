@@ -9,7 +9,7 @@
 
 ### Autores
 
-- Jhonatan Moreno Nuñez  
+- Jonathan Moreno Nuñez  
 - Juan Camilo Moreno Altamirano  
 - Stefania Mejía Velásquez  
 - Ismael Santiago Matiz Cárdenas  
